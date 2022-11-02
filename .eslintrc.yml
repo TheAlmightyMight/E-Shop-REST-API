@@ -1,0 +1,12 @@
+env:
+  browser: false
+  commonjs: true
+  es2021: true
+extends: [eslint:recommended, eslint-config-airbnb-base]
+parserOptions:
+  ecmaVersion: latest
+rules:
+  quotes:
+    - error
+    - double,
+  linebreak-style: 0
