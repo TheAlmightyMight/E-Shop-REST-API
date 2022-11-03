@@ -1,0 +1,31 @@
+@api = http://localhost:5000
+
+GET {{api}}/products HTTP/1.1
+
+###
+POST {{api}}/products HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Product title",
+    "price": 71,
+    "description": "Product description",
+    "stock": 5,
+    "picture": "https://dummyimage.com/500x500/000/fff"
+}
+ 
+###
+DELETE  {{api}}/products/63637926311a82e0c58ab180 HTTP/1.1` 
+
+###
+//{{api}}/products/:id
+PUT {{api}}/products/63637cf470212907cca94382 HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Update title",
+    "price": 12,
+    "description": "Updated product description",
+    "stock": 2,
+    "picture": "https://dummyimage.com/500x500/000/fff"
+}
