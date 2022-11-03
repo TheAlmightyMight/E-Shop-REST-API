@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const compression = require("compression");
 const mongoose = require("mongoose");
 
 require("dotenv").config();
@@ -25,8 +26,11 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {}, (err) => {
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(compression({ threshold: 1024 }));
 app.use(cookieParser());
-app.use(cors({ origin: "*" }));
+app.use(
+  cors({ origin: process.env.MODE === "dev" ? "*" : process.env.FRONTEND_URL })
+);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/products", productsRouter);
