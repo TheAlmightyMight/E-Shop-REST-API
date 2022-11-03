@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const productsRouter = require("./routes/products");
+const signUpRouter = require("./routes/signUp");
 const cartRouter = require("./routes/cart");
 
 const app = express();
@@ -23,9 +24,8 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {}, (err) => {
   }
 });
 
-app.use(logger("dev"));
+app.use(logger(":method :url :status :remote-addr :user-agent"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(compression({ threshold: 1024 }));
 app.use(cookieParser());
 app.use(
@@ -34,11 +34,8 @@ app.use(
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/products", productsRouter);
+app.use("/signUp", signUpRouter);
 app.use("/users", cartRouter);
-
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
 
 app.listen(process.env.PORT, () => {
   console.log(`App listening on port ${process.env.PORT}`);
