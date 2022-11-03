@@ -1,5 +1,6 @@
 @api = http://localhost:5000
 
+# Products route
 GET {{api}}/products HTTP/1.1
 
 ###
@@ -29,3 +30,5 @@ Content-Type: application/json
     "stock": 2,
     "picture": "https://dummyimage.com/500x500/000/fff"
 }
+
+# Users route
