@@ -1,24 +1,41 @@
 const mongoose = require("mongoose");
-
-const cartItemSchema = new mongoose.Schema({
-  title: String,
-  quantity: Number,
-  price: Number,
-  stock: Number,
-  description: String,
-  picture: [String],
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-});
+const bcrypt = require("bcrypt");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
   name: String,
   surname: String,
   profilePic: String,
-  favorites: [cartItemSchema],
-  cart: [cartItemSchema],
+  cart: {
+    required: true,
+    type: String,
+  },
 });
+
+userSchema.statics.signUp = async function (email, password) {
+  // validation
+  if (!email || !password) {
+    throw Error("All fields must be filled");
+  }
+  if (!validator.isEmail(email)) {
+    throw Error("Email not valid");
+  }
+  if (!validator.isStrongPassword(password)) {
+    throw Error("Password not strong enough");
+  }
+
+  const exists = await this.findOne({ email });
+
+  if (exists) {
+    throw Error("Email already in use");
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+
+  const user = await this.create({ email, password: hash });
+
+  return user;
+};
 
 module.exports = mongoose.model("users", userSchema);
