@@ -33,7 +33,6 @@ router.get("/", (req, res) => {
 
 router.post("/", express.json(), (req, res) => {
   try {
-    // console.log(req.body);
     const product = new productSchema(req.body);
     product.save();
     res.status(201).end();
