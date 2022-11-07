@@ -15,3 +15,5 @@ class DataBase {
     });
   }
 }
+
+module.exports = new DataBase();
