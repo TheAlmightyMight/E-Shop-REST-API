@@ -1,25 +1,62 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const cartModel = require("./cartSchema");
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  surname: String,
-  profilePic: String,
-  cart: {
+  name: {
+    required: true,
+    type: String,
+  },
+  surname: {
+    required: true,
+    type: String,
+  },
+  profilePic: {
+    default: "",
+    type: String,
+  },
+  email: {
+    required: true,
+    type: String,
+  },
+  password: {
     required: true,
     type: String,
   },
 });
 
-userSchema.statics.signUp = async function (email, password) {
+userSchema.statics.login = async function (email, password) {
+  if (!email || !password) {
+    throw Error("All fields must be filled");
+  }
+
+  const user = await this.findOne({ email });
+
+  if (!user) {
+    throw new Error("No such user with this email");
+  }
+
+  const result = await bcrypt.compare(password, user.password);
+
+  if (result) {
+    return user;
+  } else {
+    throw Error("Could not compare password");
+  }
+};
+
+userSchema.statics.signUp = async function (email, password, name1, surname1) {
+  console.log(email, typeof password, name1, surname1);
   // validation
   if (!email || !password) {
     throw Error("All fields must be filled");
   }
+
   if (!validator.isEmail(email)) {
     throw Error("Email not valid");
   }
+
   if (!validator.isStrongPassword(password)) {
     throw Error("Password not strong enough");
   }
@@ -33,7 +70,14 @@ userSchema.statics.signUp = async function (email, password) {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
 
-  const user = await this.create({ email, password: hash });
+  const user = await this.create({
+    name: name1,
+    surname: surname1,
+    email: email,
+    password: hash,
+  });
+
+  await cartModel.create({ items: [], owner: user._id });
 
   return user;
 };

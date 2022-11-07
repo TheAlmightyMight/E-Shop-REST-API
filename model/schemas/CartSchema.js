@@ -17,7 +17,6 @@ const cartItemSchema = new mongoose.Schema({
 const cartSchema = new mongoose.Schema({
   items: {
     type: [cartItemSchema],
-    default: [],
     required: true,
   },
   owner: {
