@@ -13,7 +13,7 @@ var Roles;
 })(Roles || (Roles = {}));
 var Cookies = /** @class */ (function () {
     function Cookies(options) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _a, _b, _c, _d, _e, _f, _g;
         this.key = (_a = options.key) !== null && _a !== void 0 ? _a : "id";
         this.value = (_b = options.value) !== null && _b !== void 0 ? _b : crypto.randomUUID();
         this.secure = (_c = options.secure) !== null && _c !== void 0 ? _c : false;
@@ -22,10 +22,9 @@ var Cookies = /** @class */ (function () {
         this.sameSite = (_e = options.sameSite) !== null && _e !== void 0 ? _e : SameSiteOptions.strict;
         this.path = (_f = options.path) !== null && _f !== void 0 ? _f : "/";
         this.domain = (_g = options.domain) !== null && _g !== void 0 ? _g : "";
-        this.role = (_h = options.role) !== null && _h !== void 0 ? _h : Roles.USER;
     }
     Cookies.prototype.formatAsString = function () {
-        return "".concat(this.key, "=").concat(this.value, ";").concat(this.secure ? "Secure;" : "").concat(this.httpOnly ? "HttpOnly;" : "", "Expires=").concat(new Date(this.expires), ";SameSite=").concat(this.sameSite, "; role=").concat(this.role);
+        return "".concat(this.key, "=").concat(this.value, ";").concat(this.secure ? "Secure;" : "").concat(this.httpOnly ? "HttpOnly;" : "", "Expires=").concat(new Date(this.expires), ";SameSite=").concat(this.sameSite, ";");
     };
     return Cookies;
 }());

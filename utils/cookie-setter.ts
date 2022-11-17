@@ -20,7 +20,6 @@ interface Options {
   path?: string;
   domain?: string;
   sameSite?: SameSiteOptions;
-  role?: Roles;
 }
 
 class Cookies {
@@ -32,7 +31,6 @@ class Cookies {
   path?: string;
   domain?: string;
   sameSite?: SameSiteOptions;
-  role: Roles;
 
   constructor(options: Options) {
     this.key = options.key ?? "id";
@@ -43,15 +41,12 @@ class Cookies {
     this.sameSite = options.sameSite ?? SameSiteOptions.strict;
     this.path = options.path ?? "/";
     this.domain = options.domain ?? "";
-    this.role = options.role ?? Roles.USER;
   }
 
   public formatAsString(): string {
     return `${this.key}=${this.value};${this.secure ? "Secure;" : ""}${
       this.httpOnly ? "HttpOnly;" : ""
-    }Expires=${new Date(this.expires)};SameSite=${this.sameSite}; role=${
-      this.role
-    }`;
+    }Expires=${new Date(this.expires)};SameSite=${this.sameSite};`;
   }
 }
 
