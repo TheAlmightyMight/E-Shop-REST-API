@@ -1,24 +1,16 @@
 const express = require("express");
 const userSchema = require("../model/schemas/userSchema");
-const createError = require("http-errors");
 
 const router = express.Router();
 
-router.all("/", (req, res, next) => {
-  express.urlencoded({ extended: false });
-  console.log(req.body);
-  next();
-});
-
 // SignUp logic
-
-router.post("/", (req, res) => {
-  const { email, password } = req.body;
+router.post("/", async (req, res, next) => {
+  const { email, password, name, surname, role } = req.body;
   try {
-    console.log(req.body);
-    userSchema.signUp(email, password);
-    res.status(200).end();
+    const user = await userSchema.signUp(email, password, name, surname, role);
+    res.status(201).json(user);
   } catch (err) {
+    console.error(err.message);
     res.json(err.message);
   }
 });

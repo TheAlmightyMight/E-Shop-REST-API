@@ -12,10 +12,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     type: String,
   },
-  profilePic: {
-    default: "",
-    type: String,
-  },
   email: {
     required: true,
     type: String,
@@ -23,6 +19,15 @@ const userSchema = new mongoose.Schema({
   password: {
     required: true,
     type: String,
+  },
+  profilePic: {
+    default: "",
+    type: String,
+  },
+  role: {
+    required: true,
+    type: String,
+    default: "user",
   },
 });
 
@@ -46,8 +51,13 @@ userSchema.statics.login = async function (email, password) {
   }
 };
 
-userSchema.statics.signUp = async function (email, password, name1, surname1) {
-  console.log(email, typeof password, name1, surname1);
+userSchema.statics.signUp = async function (
+  email,
+  password,
+  name,
+  surname,
+  role
+) {
   // validation
   if (!email || !password) {
     throw Error("All fields must be filled");
@@ -71,10 +81,11 @@ userSchema.statics.signUp = async function (email, password, name1, surname1) {
   const hash = await bcrypt.hash(password, salt);
 
   const user = await this.create({
-    name: name1,
-    surname: surname1,
+    name: name,
+    surname: surname,
     email: email,
     password: hash,
+    role: role,
   });
 
   await cartModel.create({ items: [], owner: user._id });
