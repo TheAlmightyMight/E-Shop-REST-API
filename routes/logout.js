@@ -1,20 +1,21 @@
 const router = require("express").Router();
 const createError = require("http-errors");
-const userModel = require("../model/schemas/userSchema");
+const Cookie = require("../model/schemas/cookie");
 
 router.post("/", async (req, res) => {
   try {
-    const { _sid } = req.body.session;
-    const user = await userModel.login(email, password);
-    if (user) {
-      console.log(user);
-      res.end("Successfully logged in");
+    const { id } = req.cookies;
+    if (id) {
+      const cookie = await Cookie.findOne({ session: id });
+      await cookie.delete();
+      res.clearCookie();
+      res.status(200).end();
     } else {
-      res.json("No such user with the provided credentials");
+      res.json("Wasn't logged in (no session)");
     }
   } catch (err) {
     console.error(err.message, err);
-    createError(500);
+    res.send(createError(500));
   }
 });
 
