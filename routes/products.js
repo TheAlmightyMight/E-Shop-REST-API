@@ -1,18 +1,21 @@
 const express = require("express");
-const productSchema = require("../model/schemas/productSchema");
+const productModel = require("../model/schemas/productSchema").productModel;
 const createError = require("http-errors");
+const auth = require("../middleware/isAuthenticated");
+
+console.log(productModel);
 
 const router = express.Router();
 
-router.all("/", express.json(), (req, res, next) => {
-  //auth
-  console.log(req.body);
+router.all("/", auth);
+router.all("/", (req, res, next) => {
+  console.log(req.role);
   next();
 });
 
 router.get("/", (req, res) => {
   try {
-    const products = productSchema
+    productModel
       .find()
       .lean()
       .exec((err, products) => {
@@ -33,7 +36,7 @@ router.get("/", (req, res) => {
 
 router.post("/", express.json(), (req, res) => {
   try {
-    const product = new productSchema(req.body);
+    const product = new productModel(req.body);
     product.save();
     res.status(201).end();
   } catch (err) {
@@ -42,7 +45,7 @@ router.post("/", express.json(), (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-  productSchema.findByIdAndUpdate(
+  productModel.findByIdAndUpdate(
     req.params.id,
     req.body,
     {},
@@ -61,7 +64,7 @@ router.put("/:id", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-  const products = productSchema
+  productModel
     .find({ _id: req.params.id })
     .lean()
     .exec((err, products) => {
@@ -79,7 +82,7 @@ router.get("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   try {
-    productSchema.findByIdAndDelete(req.params.id, (err) => {
+    productModel.findByIdAndDelete(req.params.id, (err) => {
       if (err) {
         createError(500, err);
       } else {
