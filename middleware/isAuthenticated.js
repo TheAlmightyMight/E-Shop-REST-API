@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const isAdmin = require("../utils/isAdmin");
 const cookieModel = require("../model/schemas/cookie");
 
 const isAuthenticated = (req, res, next) => {
@@ -10,6 +10,11 @@ const isAuthenticated = (req, res, next) => {
       } else if (!cookie) {
         res.status(401).end();
       } else {
+        if (isAdmin(cookie, res)) {
+          req.role = "admin";
+        } else {
+          req.role = "user";
+        }
         next();
       }
     });

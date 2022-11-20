@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
       res.clearCookie();
       res.status(200).end();
     } else {
-      res.json("Wasn't logged in (no session)");
+      res.json("User wasn't logged in (no session)");
     }
   } catch (err) {
     console.error(err.message, err);
