@@ -1,28 +1,18 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
+const productSchema = require("./productSchema").productSchema;
 
-const cartItemSchema = new mongoose.Schema({
-  title: String,
-  quantity: Number,
-  price: Number,
-  stock: Number,
-  description: String,
-  picture: [String],
-  createdAt: {
-    type: Date,
-    default: Date.now(),
+const cartSchema = new mongoose.Schema(
+  {
+    items: {
+      type: [productSchema],
+      required: true,
+    },
+    owner: {
+      required: true,
+      type: String,
+    },
   },
-});
-
-const cartSchema = new mongoose.Schema({
-  items: {
-    type: [cartItemSchema],
-    required: true,
-  },
-  owner: {
-    required: true,
-    type: String,
-  },
-});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("carts", cartSchema);
