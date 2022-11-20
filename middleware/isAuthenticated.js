@@ -1,4 +1,3 @@
-const isAdmin = require("../utils/isAdmin");
 const cookieModel = require("../model/schemas/cookie");
 
 const isAuthenticated = (req, res, next) => {
@@ -10,9 +9,10 @@ const isAuthenticated = (req, res, next) => {
       } else if (!cookie) {
         res.status(401).end();
       } else {
-        if (isAdmin(cookie, res)) {
+        console.log(cookie.ownerRole, "role");
+        if (cookie.ownerRole === "admin") {
           req.role = "admin";
-        } else {
+        } else if (cookie.ownerRole === "user") {
           req.role = "user";
         }
         next();

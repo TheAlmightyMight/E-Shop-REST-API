@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const createError = require("http-errors");
 const Cookie = require("../model/schemas/cookie");
 
 router.post("/", async (req, res) => {
@@ -11,11 +10,11 @@ router.post("/", async (req, res) => {
       res.clearCookie();
       res.status(200).end();
     } else {
-      res.json("User wasn't logged in (no session)");
+      res.json({ msg: "User wasn't logged in (no session)" });
     }
   } catch (err) {
     console.error(err.message, err);
-    res.send(createError(500));
+    res.status(500).json({ msg: err.message });
   }
 });
 

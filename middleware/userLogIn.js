@@ -6,10 +6,12 @@ const loginUser = async (user, res) => {
     expires: Date.now() + 86400000,
   });
 
+  console.log(user.role, "the fucking role");
+
   const doc = cookieModel.create(
     {
       session: cookie.value,
-      role: user.role,
+      ownerRole: user.role,
     },
     (err) => {
       if (err) {

@@ -8,8 +8,8 @@ const cartSchema = new mongoose.Schema(
       required: true,
     },
     owner: {
-      required: true,
       type: String,
+      required: true,
     },
   },
   { timestamps: true }

@@ -71,7 +71,7 @@ userSchema.statics.signUp = async function (
     throw Error("Password not strong enough");
   }
 
-  const exists = await this.findOne({ email });
+  const exists = await this.findOne({ email: email });
 
   if (exists) {
     throw Error("Email already in use");
