@@ -6,14 +6,15 @@ const Cookie = new mongoose.Schema(
       type: String,
       required: true,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now(),
+    ownerRole: {
+      type: String,
+      required: true,
+      default: "user",
     },
   },
   { timestamps: true }
 );
 
-Cookie.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 7 });
+Cookie.index({ createdAt: 1 }, { expireAfterSeconds: 604800 });
 
 module.exports = mongoose.model("cookies", Cookie);
