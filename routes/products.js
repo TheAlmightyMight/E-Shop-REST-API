@@ -1,17 +1,10 @@
 const express = require("express");
 const productModel = require("../model/schemas/productSchema").productModel;
-const createError = require("http-errors");
 const auth = require("../middleware/isAuthenticated");
-
-console.log(productModel);
 
 const router = express.Router();
 
 router.all("/", auth);
-router.all("/", (req, res, next) => {
-  console.log(req.role);
-  next();
-});
 
 router.get("/", (req, res) => {
   try {
@@ -21,7 +14,7 @@ router.get("/", (req, res) => {
       .exec((err, products) => {
         try {
           if (err) {
-            createError(500);
+            throw new Error("DB error");
           } else {
             res.json(products);
           }
@@ -31,36 +24,43 @@ router.get("/", (req, res) => {
       });
   } catch (err) {
     console.error(err.message);
+    res.status(500).json({ msg: err.message });
   }
 });
 
-router.post("/", express.json(), (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const product = new productModel(req.body);
-    product.save();
-    res.status(201).end();
+    console.log(req.role);
+    if (req.role === "admin") {
+      const product = new productModel(req.body);
+      await product.save();
+      res.status(201).end();
+    } else {
+      res.status(403).end();
+    }
   } catch (err) {
     console.error(err.message);
+    res.status(500).json({ msg: err.message });
   }
 });
 
 router.put("/:id", (req, res) => {
-  productModel.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {},
-    (err, product) => {
-      try {
+  try {
+    if (req.role === "admin") {
+      productModel.findByIdAndUpdate(req.params.id, req.body, {}, (err) => {
         if (err) {
-          createError(500);
+          throw new Error("DB error");
         } else {
           res.status(200).end();
         }
-      } catch (err) {
-        console.error(err.message);
-      }
+      });
+    } else {
+      res.status(403).end();
     }
-  );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: err.message });
+  }
 });
 
 router.get("/:id", (req, res) => {
@@ -70,27 +70,33 @@ router.get("/:id", (req, res) => {
     .exec((err, products) => {
       try {
         if (err) {
-          createError(500);
+          throw new Error("DB error");
         } else {
           res.json(products);
         }
       } catch (err) {
         console.error(err.message);
+        res.status(500).json({ msg: err.message });
       }
     });
 });
 
 router.delete("/:id", (req, res) => {
   try {
-    productModel.findByIdAndDelete(req.params.id, (err) => {
-      if (err) {
-        createError(500, err);
-      } else {
-        res.status(200).end();
-      }
-    });
+    if (req.role === "admin") {
+      productModel.findByIdAndDelete(req.params.id, (err) => {
+        if (err) {
+          throw new Error("DB error");
+        } else {
+          res.status(200).end();
+        }
+      });
+    } else {
+      res.status(403).end();
+    }
   } catch (err) {
     console.error(err);
+    res.status(500).json({ msg: err.message });
   }
 });
 
