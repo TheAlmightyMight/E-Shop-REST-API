@@ -2,8 +2,10 @@
   "name": "e-shop-rest",
   "version": "0.0.0",
   "private": true,
+  "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   },
   "dependencies": {
     "@types/express": "^4.17.14",

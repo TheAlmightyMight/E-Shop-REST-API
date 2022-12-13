@@ -31,4 +31,28 @@ Content-Type: application/json
     "picture": "https://dummyimage.com/500x500/000/fff"
 }
 
-# Users route
+###
+
+# SignUp route
+POST {{api}}/signUp HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+email:klimentykk3@gmail.com
+password:98gibA213-2
+name:klim
+surname:karavev
+role:admin
+
+###
+
+# Login route
+POST {{api}}/login HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+email:klimentykk@gmail.com
+password:98gibA213-2
+
+###
+
+#Logout route
+
