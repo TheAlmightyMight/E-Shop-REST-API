@@ -56,7 +56,7 @@ userSchema.statics.signUp = async function (
   password,
   name,
   surname,
-  role
+  role,
 ) {
   // validation
   if (!email || !password) {
@@ -92,5 +92,7 @@ userSchema.statics.signUp = async function (
 
   return user;
 };
+
+console.log(cartSchema);
 
 module.exports = mongoose.model("users", userSchema);
